@@ -503,7 +503,11 @@ impl ReflectBase {
         match self {
             ReflectBase::Component(entity, component_id) => {
                 // Safety: the caller ensures invariants hold
-                world.get_entity(entity)?.get_by_id(component_id)
+                if let Ok(entity) = world.get_entity(entity) {
+                    entity.get_by_id(component_id)
+                } else {
+                    None
+                }
             }
             ReflectBase::Resource(component_id) => {
                 // Safety: the caller ensures invariants hold
@@ -522,7 +526,11 @@ impl ReflectBase {
         match self {
             ReflectBase::Component(entity, component_id) => {
                 // Safety: the caller ensures invariants hold
-                world.get_entity(entity)?.get_mut_by_id(component_id)
+                if let Ok(entity) = world.get_entity(entity) {
+                    entity.get_mut_by_id(component_id).ok()
+                } else {
+                    None
+                }
             }
             ReflectBase::Resource(component_id) => {
                 // Safety: the caller ensures invariants hold

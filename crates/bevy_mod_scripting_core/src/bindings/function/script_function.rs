@@ -11,7 +11,7 @@ use crate::{
     ScriptValue,
 };
 use bevy::prelude::{Reflect, Resource};
-use bevy::utils::hashbrown::HashMap;
+use bevy::platform::collections::HashMap;
 use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 use std::borrow::Cow;
 use std::collections::VecDeque;
@@ -622,7 +622,7 @@ macro_rules! impl_script_function {
     };
 }
 
-bevy::utils::all_tuples!(impl_script_function, 0, 13, T);
+variadics_please::all_tuples!(impl_script_function, 0, 13, T);
 
 #[cfg(test)]
 mod test {

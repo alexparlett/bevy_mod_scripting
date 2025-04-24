@@ -312,6 +312,8 @@ fn init_world<F: FnOnce(&mut World, &mut TypeRegistry)>(world: &mut World, init:
                 StorageType::Table,
                 Layout::new::<usize>(),
                 None,
+                true,
+                ComponentCloneBehavior::Default,
             ))
         };
     }
@@ -346,7 +348,6 @@ pub fn setup_integration_test<F: FnOnce(&mut World, &mut TypeRegistry)>(init: F)
     app.add_plugins((
         MinimalPlugins,
         AssetPlugin::default(),
-        HierarchyPlugin,
         DiagnosticsPlugin,
         LogPlugin {
             filter: log_level,

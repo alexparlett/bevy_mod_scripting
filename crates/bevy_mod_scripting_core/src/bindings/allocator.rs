@@ -3,10 +3,10 @@
 use bevy::{
     app::{App, Plugin, PostUpdate},
     diagnostic::{Diagnostic, DiagnosticPath, Diagnostics, RegisterDiagnostic},
-    ecs::system::{Res, Resource},
+    ecs::system::{Res},
     prelude::ResMut,
     reflect::PartialReflect,
-    utils::hashbrown::HashMap,
+    platform::collections::HashMap,
 };
 use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 use std::{
@@ -16,6 +16,7 @@ use std::{
     hash::Hasher,
     sync::{atomic::AtomicU64, Arc},
 };
+use bevy::prelude::Resource;
 
 /// The path used for the total number of allocations diagnostic
 pub const ALLOCATOR_TOTAL_DIAG_PATH: DiagnosticPath =

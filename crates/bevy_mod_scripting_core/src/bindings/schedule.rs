@@ -9,9 +9,9 @@ use bevy::{
     },
     ecs::{
         schedule::{Schedule, ScheduleLabel, Schedules},
-        system::Resource,
         world::World,
     },
+    prelude::Resource,
 };
 use bevy_system_reflection::{ReflectSchedule, ReflectSystem};
 use parking_lot::RwLock;
@@ -342,7 +342,7 @@ mod tests {
 
         // Collect all edges as (from, to) name pairs.
         let mut found_edges = Vec::new();
-        for (from, to, _) in graph.dependency().graph().all_edges() {
+        for (from, to) in graph.dependency().graph().all_edges() {
             let name_from = resolve_name(from);
             let name_to = resolve_name(to);
             found_edges.push((name_from, name_to));

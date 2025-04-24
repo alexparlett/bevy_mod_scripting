@@ -428,7 +428,7 @@ impl<T: PartialReflect + ?Sized> PartialReflectExt for T {
         // try from reflect
         match <dyn PartialReflect>::from_reflect(reflect, world.clone()) {
             Ok(v) => v.into_partial_reflect(),
-            Err(_) => reflect.clone_value(),
+            Err(_) => reflect.reflect_clone().unwrap(),
         }
     }
 

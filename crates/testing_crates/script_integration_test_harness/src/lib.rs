@@ -6,20 +6,24 @@ use std::{
     time::{Duration, Instant},
 };
 
+use bevy::ecs::schedule::ScheduleConfigs;
+use bevy::ecs::system::{BoxedSystem, InfallibleSystemWrapper};
+use bevy::log::tracing;
+use bevy::log::tracing::event;
+use bevy::prelude::{BevyError, IntoScheduleConfigs};
 use bevy::{
     app::{Last, Plugin, PostUpdate, Startup, Update},
     asset::{AssetServer, Handle},
     ecs::{
         component::Component,
         event::{Event, Events},
-        schedule::{IntoSystemConfigs, SystemConfigs},
-        system::{IntoSystem, Local, Res, Resource, SystemState},
-        world::{Command, FromWorld, Mut},
+        prelude::{Command, Resource},
+        system::{IntoSystem, Local, Res, SystemState},
+        world::{FromWorld, Mut},
     },
     log::Level,
     prelude::{Entity, World},
     reflect::{Reflect, TypeRegistry},
-    utils::tracing,
 };
 use bevy_mod_scripting_core::{
     asset::ScriptAsset,
@@ -55,9 +59,12 @@ struct TestCallbackBuilder<P: IntoScriptPluginParams, L: IntoCallbackLabel> {
 }
 
 impl<L: IntoCallbackLabel, P: IntoScriptPluginParams> TestCallbackBuilder<P, L> {
-    fn build(script_id: impl Into<ScriptId>, expect_response: bool) -> SystemConfigs {
+    fn build(
+        script_id: impl Into<ScriptId>,
+        expect_response: bool,
+    ) -> ScheduleConfigs<BoxedSystem<(), Result<(), BevyError>>> {
         let script_id = script_id.into();
-        IntoSystem::into_system(
+        let system = Box::new(InfallibleSystemWrapper::new(IntoSystem::into_system(
             move |world: &mut World,
                   system_state: &mut SystemState<WithWorldGuard<HandlerContext<P>>>| {
                 let with_guard = system_state.get_mut(world);
@@ -65,9 +72,9 @@ impl<L: IntoCallbackLabel, P: IntoScriptPluginParams> TestCallbackBuilder<P, L> 
 
                 system_state.apply(world);
             },
-        )
-        .with_name(L::into_callback_label().to_string())
-        .into_configs()
+        ).with_name(L::into_callback_label().to_string())));
+
+        system.into_configs()
     }
 }
 
@@ -341,7 +348,7 @@ pub fn run_lua_benchmark<M: criterion::measurement::Measurement>(
     label: &str,
     criterion: &mut criterion::BenchmarkGroup<M>,
 ) -> Result<(), String> {
-    use bevy::{log::Level, utils::tracing};
+    use bevy::log::Level;
     use bevy_mod_scripting_lua::mlua::Function;
 
     let plugin = make_test_lua_plugin();
@@ -373,7 +380,7 @@ pub fn run_rhai_benchmark<M: criterion::measurement::Measurement>(
     label: &str,
     criterion: &mut criterion::BenchmarkGroup<M>,
 ) -> Result<(), String> {
-    use bevy::{log::Level, utils::tracing};
+    use bevy::log::Level;
     use bevy_mod_scripting_rhai::rhai::Dynamic;
 
     let plugin = make_test_rhai_plugin();
@@ -587,7 +594,7 @@ pub fn perform_benchmark_with_generator<
                 )
             },
             |(i, w)| {
-                bevy::utils::tracing::event!(bevy::log::Level::TRACE, "profiling_iter {}", label);
+                event!(bevy::log::Level::TRACE, "profiling_iter {}", label);
                 bench_fn(w, i)
             },
             batch_size,

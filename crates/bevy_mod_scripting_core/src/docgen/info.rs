@@ -191,7 +191,7 @@ macro_rules! impl_documentable {
     };
 }
 
-bevy::utils::all_tuples!(impl_documentable, 0, 13, T);
+variadics_please::all_tuples!(impl_documentable, 0, 13, T);
 
 #[cfg(test)]
 mod test {

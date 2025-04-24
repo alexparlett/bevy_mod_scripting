@@ -1,8 +1,6 @@
 use bevy::log::tracing_subscriber::layer::SubscriberExt;
-use bevy::log::{tracing_subscriber, Level};
+use bevy::log::{tracing, tracing_subscriber, Level};
 use bevy::reflect::Reflect;
-use bevy::utils::tracing;
-use bevy::utils::tracing::span;
 use bevy_mod_scripting_core::bindings::{
     FromScript, IntoScript, Mut, Ref, ReflectReference, ScriptValue, Val,
 };
@@ -16,6 +14,7 @@ use script_integration_test_harness::{
 };
 use std::collections::HashMap;
 use std::{path::PathBuf, sync::LazyLock, time::Duration};
+use bevy::log::tracing::span;
 use test_utils::{discover_all_tests, Test};
 
 extern crate bevy_mod_scripting;

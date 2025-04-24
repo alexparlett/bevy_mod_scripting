@@ -18,20 +18,20 @@ pub struct BevyCoreScriptingPlugin;
     bms_core_path = "bevy_mod_scripting_core",
     generated
 )]
-impl bevy::core::prelude::Name {
-    fn clone(_self: Ref<bevy::core::prelude::Name>) -> Val<bevy::core::prelude::Name> {
-        let output: Val<bevy::core::prelude::Name> = <bevy::core::prelude::Name as std::clone::Clone>::clone(
+impl bevy::prelude::Name {
+    fn clone(_self: Ref<bevy::prelude::Name>) -> Val<bevy::prelude::Name> {
+        let output: Val<bevy::prelude::Name> = <bevy::prelude::Name as std::clone::Clone>::clone(
                 &_self,
             )
             .into();
         output
     }
     fn eq(
-        _self: Ref<bevy::core::prelude::Name>,
-        other: Ref<bevy::core::prelude::Name>,
+        _self: Ref<bevy::prelude::Name>,
+        other: Ref<bevy::prelude::Name>,
     ) -> bool {
-        let output: bool = <bevy::core::prelude::Name as std::cmp::PartialEq<
-            bevy::core::prelude::Name,
+        let output: bool = <bevy::prelude::Name as std::cmp::PartialEq<
+            bevy::prelude::Name,
         >>::eq(&_self, &other)
             .into();
         output

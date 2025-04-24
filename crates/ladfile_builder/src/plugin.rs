@@ -6,8 +6,9 @@ use bevy::{
     app::{App, Plugin, Startup},
     ecs::{
         reflect::AppTypeRegistry,
-        system::{Res, Resource},
+        system::{Res},
         world::World,
+        prelude::Resource,
     },
 };
 use bevy_mod_scripting_core::bindings::{

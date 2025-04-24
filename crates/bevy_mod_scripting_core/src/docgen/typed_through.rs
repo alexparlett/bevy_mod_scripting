@@ -265,7 +265,7 @@ macro_rules! impl_through_typed_tuple {
     };
 }
 
-bevy::utils::all_tuples!(impl_through_typed_tuple, 0, 13, T);
+variadics_please::all_tuples!(impl_through_typed_tuple, 0, 13, T);
 
 #[cfg(test)]
 mod test {
