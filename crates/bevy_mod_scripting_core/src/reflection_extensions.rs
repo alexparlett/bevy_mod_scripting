@@ -640,7 +640,7 @@ mod test {
 
     #[test]
     fn test_try_insert_map() {
-        let mut map = std::collections::HashMap::<i32, i32>::default();
+        let mut map = bevy::platform::collections::HashMap::<i32, i32>::default();
         let value = 4;
         let value_ref: Box<dyn PartialReflect> = Box::new(value);
         map.insert(1, 2);
@@ -665,12 +665,12 @@ mod test {
     #[test]
     fn test_try_insert_dynamic_map_into_map_of_maps() {
         let mut map =
-            std::collections::HashMap::<i32, std::collections::HashMap<i32, i32>>::default();
+            bevy::platform::collections::HashMap::<i32, bevy::platform::collections::HashMap<i32, i32>>::default();
         let value = DynamicMap::from_iter(vec![(1, 2), (2, 3), (3, 4)]);
         let value_ref: Box<dyn PartialReflect> = Box::new(value.clone_dynamic());
-        map.insert(1, std::collections::HashMap::<i32, i32>::default());
-        map.insert(2, std::collections::HashMap::<i32, i32>::default());
-        map.insert(3, std::collections::HashMap::<i32, i32>::default());
+        map.insert(1, bevy::platform::collections::HashMap::<i32, i32>::default());
+        map.insert(2, bevy::platform::collections::HashMap::<i32, i32>::default());
+        map.insert(3, bevy::platform::collections::HashMap::<i32, i32>::default());
         map.try_insert_boxed(Box::new(1), value_ref).unwrap();
         assert!(value.reflect_partial_eq(&map[&1]).unwrap());
     }

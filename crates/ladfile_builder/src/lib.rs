@@ -25,10 +25,10 @@ use std::{
     any::TypeId,
     borrow::Cow,
     cmp::{max, min},
-    collections::HashMap,
     ffi::OsString,
     path::PathBuf,
 };
+use bevy::platform::collections::HashMap;
 
 /// We can assume that the types here will be either primitives
 /// or reflect types, as the rest will be covered by typed wrappers

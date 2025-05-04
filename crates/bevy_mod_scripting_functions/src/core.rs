@@ -1,7 +1,7 @@
 //! Contains functions defined by the [`bevy_mod_scripting_core`] crate
 
-use std::{collections::HashMap, ops::Deref};
-
+use std::{ops::Deref};
+use bevy::platform::collections::HashMap;
 use bevy::prelude::*;
 use bevy_mod_scripting_core::{
     bindings::{

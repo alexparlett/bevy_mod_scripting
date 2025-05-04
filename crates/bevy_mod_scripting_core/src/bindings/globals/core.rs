@@ -1,12 +1,13 @@
 //! Core globals exposed by the BMS framework
 
-use std::{cell::RefCell, collections::HashMap, sync::Arc};
+use std::{cell::RefCell, sync::Arc};
 
 use bevy::{
     app::Plugin,
     ecs::{entity::Entity, reflect::AppTypeRegistry, world::World},
     reflect::TypeRegistration,
 };
+use bevy::platform::collections::HashMap;
 use bevy_mod_scripting_derive::script_globals;
 
 use crate::{

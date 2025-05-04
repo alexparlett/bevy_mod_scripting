@@ -2,10 +2,7 @@
 
 use crate::reflection_extensions::{FakeType, TypeIdExtensions};
 
-use crate::bindings::{
-    access_map::ReflectAccessId, script_value::ScriptValue, ReflectAllocationId, ReflectBase,
-    ReflectBaseType, ReflectReference, WorldGuard,
-};
+use crate::bindings::{access_map::ReflectAccessId, script_value::ScriptValue, ReflectAllocationId, ReflectBase, ReflectBaseType, ReflectReference, WorldGuard};
 use bevy::{
     ecs::component::ComponentId,
     prelude::World,
@@ -16,6 +13,8 @@ use std::{
     any::{Any, TypeId},
     borrow::Cow,
 };
+use std::fmt::Debug;
+use rhai::{Dynamic};
 
 /// A utility for printing reflect references in a human readable format.
 pub struct ReflectReferencePrinter {
@@ -516,6 +515,8 @@ impl DisplayWithWorld for ScriptValue {
             ScriptValue::Error(script_error) => script_error.display_with_world(world),
             ScriptValue::List(vec) => vec.display_with_world(world),
             ScriptValue::Map(hash_map) => hash_map.display_with_world(world),
+            #[cfg(feature = "rhai")]
+            ScriptValue::Dynamic(custom_type) => custom_type.display_with_world(world),
         }
     }
 
@@ -545,6 +546,8 @@ impl DisplayWithWorld for ScriptValue {
             }
             ScriptValue::Error(interop_error) => interop_error.display_without_world(),
             ScriptValue::Map(hash_map) => hash_map.display_without_world(),
+            #[cfg(feature = "rhai")]
+            ScriptValue::Dynamic(custom_type) => custom_type.display_without_world(),
         }
     }
 }
@@ -605,7 +608,7 @@ impl DisplayWithWorld for String {
 }
 #[profiling::all_functions]
 impl<K: DisplayWithWorld + 'static, V: DisplayWithWorld + 'static> DisplayWithWorld
-    for std::collections::HashMap<K, V>
+    for bevy::platform::collections::HashMap<K, V>
 {
     fn display_with_world(&self, world: WorldGuard) -> String {
         let mut string = String::new();
@@ -650,6 +653,20 @@ impl<K: DisplayWithWorld + 'static, V: DisplayWithWorld + 'static> DisplayWithWo
             }
         });
         string
+    }
+}
+
+impl DisplayWithWorld for Dynamic {
+    fn display_without_world(&self) -> String {
+        format!("{:?}", self)
+    }
+
+    fn display_with_world(&self, _world: WorldGuard) -> String {
+        self.display_without_world()
+    }
+
+    fn display_value_with_world(&self, _world: WorldGuard) -> String {
+        self.display_without_world()
     }
 }
 
@@ -772,7 +789,7 @@ mod test {
         let mut world = setup_world();
         let world = WorldGuard::new_exclusive(&mut world);
 
-        let mut map = std::collections::HashMap::new();
+        let mut map = bevy::platform::collections::HashMap::new();
         map.insert("hello".to_owned(), ScriptValue::Bool(true));
 
         assert_eq!(map.display_with_world(world.clone()), "{hello: true}");

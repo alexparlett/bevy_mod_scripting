@@ -1,10 +1,10 @@
 //! This module contains the `ScriptValue` enum which is used to pass values between scripting languages and Rust.
 
-use std::{borrow::Cow, collections::HashMap};
-
-use bevy::reflect::{OffsetAccess, ParsedPath, Reflect};
-
+use std::{borrow::Cow};
+use std::fmt::Debug;
+use bevy::platform::collections::HashMap;
 use crate::error::InteropError;
+use bevy::reflect::{OffsetAccess, ParsedPath, Reflect};
 
 use super::{
     function::script_function::{DynamicScriptFunction, DynamicScriptFunctionMut},
@@ -13,7 +13,7 @@ use super::{
 
 /// An abstraction of values that can be passed to and from scripts.
 /// This allows us to re-use logic between scripting languages.
-#[derive(Debug, Clone, PartialEq, Reflect, Default)]
+#[derive(Debug, Clone, Reflect, Default)]
 #[reflect(opaque)]
 pub enum ScriptValue {
     /// Represents the absence of a value.
@@ -39,7 +39,31 @@ pub enum ScriptValue {
     Function(DynamicScriptFunction),
     /// Represents any error, will be thrown when returned to a script
     Error(InteropError),
+
+    #[cfg(feature = "rhai")]
+    /// Represents a rhai dynamic that can be used directly
+    Dynamic(rhai::Dynamic),
 }
+
+impl PartialEq for ScriptValue {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (ScriptValue::Unit, ScriptValue::Unit) => true,
+            (ScriptValue::Bool(a), ScriptValue::Bool(b)) => a == b,
+            (ScriptValue::Integer(a), ScriptValue::Integer(b)) => a == b,
+            (ScriptValue::Float(a), ScriptValue::Float(b)) => a == b,
+            (ScriptValue::String(a), ScriptValue::String(b)) => a == b,
+            (ScriptValue::List(a), ScriptValue::List(b)) => a == b,
+            (ScriptValue::Map(a), ScriptValue::Map(b)) => a == b,
+            (ScriptValue::Reference(a), ScriptValue::Reference(b)) => a == b,
+            (ScriptValue::FunctionMut(a), ScriptValue::FunctionMut(b)) => a == b,
+            (ScriptValue::Function(a), ScriptValue::Function(b)) => a == b,
+            (ScriptValue::Error(a), ScriptValue::Error(b)) => a == b,
+            (_, _) => false
+        }
+    }
+}
+
 
 #[profiling::all_functions]
 impl ScriptValue {
@@ -65,6 +89,8 @@ impl ScriptValue {
             ScriptValue::Function(_) => "Function".to_owned(),
             ScriptValue::Error(_) => "Error".to_owned(),
             ScriptValue::Map(_) => "Map".to_owned(),
+            #[cfg(feature = "rhai")]
+            ScriptValue::Dynamic(_) => "CustomType".to_owned(),
         }
     }
 }
@@ -202,6 +228,13 @@ impl TryFrom<ScriptValue> for ParsedPath {
                 return Err(InteropError::invalid_index(
                     ScriptValue::Reference(reflect_reference),
                     "References cannot be used to index into reflected values".to_owned(),
+                ))
+            }
+            #[cfg(feature = "rhai")]
+            ScriptValue::Dynamic(custom_type) => {
+                return Err(InteropError::invalid_index(
+                    ScriptValue::Dynamic(custom_type),
+                    "CustomTypes cannot be used to index into reflected values".to_owned(),
                 ))
             }
             _ => ParsedPath(vec![]),

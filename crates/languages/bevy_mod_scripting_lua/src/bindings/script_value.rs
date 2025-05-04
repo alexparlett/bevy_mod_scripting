@@ -6,9 +6,10 @@ use bevy_mod_scripting_core::{
 };
 use mlua::{FromLua, IntoLua, Value, Variadic};
 use std::{
-    collections::{HashMap, VecDeque},
+    collections::{VecDeque},
     ops::{Deref, DerefMut},
 };
+use bevy::platform::collections::HashMap;
 
 #[derive(Debug, Clone)]
 /// A wrapper around a [`ScriptValue`] that implements [`FromLua`] and [`IntoLua`]
@@ -164,8 +165,9 @@ impl IntoLua for LuaScriptValue {
                     .into_iter()
                     .map(|(k, v)| Ok((k, LuaScriptValue::from(v).into_lua(lua)?)))
                     .collect::<Result<_, mlua::Error>>()?;
-                hashmap.into_lua(lua)?
+                Value::Table(lua.create_table_from(hashmap)?)
             }
+            _ => Value::Nil
         })
     }
 }

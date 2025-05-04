@@ -186,7 +186,7 @@ impl<T: TypedThrough> TypedThrough for Vec<T> {
     }
 }
 
-impl<K: TypedThrough, V: TypedThrough> TypedThrough for std::collections::HashMap<K, V> {
+impl<K: TypedThrough, V: TypedThrough> TypedThrough for bevy::platform::collections::HashMap<K, V> {
     fn through_type_info() -> ThroughTypeInfo {
         ThroughTypeInfo::TypedWrapper(TypedWrapperKind::HashMap(
             Box::new(K::through_type_info()),
@@ -355,7 +355,7 @@ mod test {
         ));
 
         assert!(matches!(
-            std::collections::HashMap::<i32, f32>::through_type_info(),
+            bevy::platform::collections::HashMap::<i32, f32>::through_type_info(),
             ThroughTypeInfo::TypedWrapper(TypedWrapperKind::HashMap(..))
         ));
 
@@ -388,7 +388,7 @@ mod test {
         ));
 
         assert!(matches!(
-            into_through_type_info(std::collections::HashMap::<i32, f32>::type_info()),
+            into_through_type_info(bevy::platform::collections::HashMap::<i32, f32>::type_info()),
             ThroughTypeInfo::TypedWrapper(TypedWrapperKind::HashMap(..))
         ));
 

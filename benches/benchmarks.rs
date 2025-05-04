@@ -12,7 +12,7 @@ use script_integration_test_harness::{
     make_test_lua_plugin, make_test_rhai_plugin, perform_benchmark_with_generator,
     run_lua_benchmark, run_plugin_script_load_benchmark, run_rhai_benchmark,
 };
-use std::collections::HashMap;
+use bevy::platform::collections::HashMap;
 use std::{path::PathBuf, sync::LazyLock, time::Duration};
 use bevy::log::tracing::span;
 use test_utils::{discover_all_tests, Test};

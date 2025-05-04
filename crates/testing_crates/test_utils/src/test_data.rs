@@ -1,5 +1,5 @@
 use std::alloc::Layout;
-use std::collections::HashMap;
+use bevy::platform::collections::HashMap;
 
 use bevy::asset::AssetPlugin;
 use bevy::diagnostic::DiagnosticsPlugin;

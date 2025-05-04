@@ -1,5 +1,4 @@
 use std::{
-    collections::HashMap,
     sync::{Arc, Mutex},
 };
 
@@ -9,6 +8,7 @@ use bevy::{
     prelude::{Entity, World},
     reflect::{Reflect, TypeRegistration},
 };
+use bevy::platform::collections::HashMap;
 use bevy_mod_scripting_core::{
     asset::Language,
     bindings::{

@@ -1,5 +1,5 @@
-use std::{collections::HashMap, str::FromStr};
-
+use std::{str::FromStr};
+use std::collections::HashMap;
 use clap::ValueEnum;
 use convert_case::{Case, Casing};
 use include_dir::{include_dir, Dir};

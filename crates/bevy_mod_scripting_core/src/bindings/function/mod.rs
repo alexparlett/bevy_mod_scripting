@@ -190,7 +190,7 @@ mod test {
             V::Underlying: FromReflect + Typed + GetTypeRegistration + Eq,
             for<'a> V::This<'a>: Into<V>,
         {
-            test_is_valid_arg_and_return::<std::collections::HashMap<String, V>>();
+            test_is_valid_arg_and_return::<bevy::platform::collections::HashMap<String, V>>();
         }
     }
 

@@ -15,7 +15,8 @@ use bevy::{
 };
 use bevy_system_reflection::{ReflectSchedule, ReflectSystem};
 use parking_lot::RwLock;
-use std::{any::TypeId, collections::HashMap, sync::Arc};
+use std::{any::TypeId, sync::Arc};
+use bevy::platform::collections::HashMap;
 
 #[derive(Default, Clone, Resource)]
 /// A Send + Sync registry of bevy schedules.

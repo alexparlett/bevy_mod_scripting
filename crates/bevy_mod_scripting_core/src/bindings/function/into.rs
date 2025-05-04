@@ -1,8 +1,8 @@
 //! Implementations of the [`IntoScript`] trait for various types.
 
 use bevy::reflect::Reflect;
-use std::{borrow::Cow, collections::HashMap, ffi::OsString, path::PathBuf};
-
+use std::{borrow::Cow, ffi::OsString, path::PathBuf};
+use bevy::platform::collections::HashMap;
 use super::{DynamicScriptFunction, DynamicScriptFunctionMut, Union, Val};
 use crate::{
     bindings::{ReflectReference, ScriptValue, WorldGuard},

@@ -12,7 +12,6 @@ use std::{
     ops::{Deref, DerefMut},
     path::PathBuf,
 };
-
 use super::script_function::{DynamicScriptFunction, DynamicScriptFunctionMut};
 
 /// Describes the procedure for constructing a value of type `T` from a [`ScriptValue`].
@@ -148,6 +147,23 @@ impl FromScript for ReflectReference {
             ScriptValue::Reference(r) => Ok(r),
             _ => Err(InteropError::value_mismatch(
                 std::any::TypeId::of::<ReflectReference>(),
+                value,
+            )),
+        }
+    }
+}
+
+
+#[cfg(feature = "rhai")]
+#[profiling::all_functions]
+impl FromScript for rhai::Dynamic {
+    type This<'w> = Self;
+    #[profiling::function]
+    fn from_script(value: ScriptValue, _world: WorldGuard) -> Result<Self, InteropError> {
+        match value {
+            ScriptValue::Dynamic(r) => Ok(r),
+            _ => Err(InteropError::value_mismatch(
+                std::any::TypeId::of::<rhai::Dynamic>(),
                 value,
             )),
         }
@@ -450,7 +466,7 @@ impl FromScript for DynamicScriptFunction {
 }
 
 #[profiling::all_functions]
-impl<V> FromScript for std::collections::HashMap<String, V>
+impl<V> FromScript for bevy::platform::collections::HashMap<String, V>
 where
     V: FromScript + 'static,
     for<'w> V::This<'w>: Into<V>,
@@ -460,14 +476,14 @@ where
     fn from_script(value: ScriptValue, world: WorldGuard) -> Result<Self, InteropError> {
         match value {
             ScriptValue::Map(map) => {
-                let mut hashmap = std::collections::HashMap::new();
+                let mut hashmap = bevy::platform::collections::HashMap::new();
                 for (key, value) in map {
                     hashmap.insert(key, V::from_script(value, world.clone())?.into());
                 }
                 Ok(hashmap)
             }
             ScriptValue::List(list) => {
-                let mut hashmap = std::collections::HashMap::new();
+                let mut hashmap = bevy::platform::collections::HashMap::new();
                 for elem in list {
                     let (key, val) = <(String, V)>::from_script(elem, world.clone())?;
                     hashmap.insert(key, val);
@@ -475,7 +491,7 @@ where
                 Ok(hashmap)
             }
             _ => Err(InteropError::value_mismatch(
-                std::any::TypeId::of::<std::collections::HashMap<String, V>>(),
+                std::any::TypeId::of::<bevy::platform::collections::HashMap<String, V>>(),
                 value,
             )),
         }

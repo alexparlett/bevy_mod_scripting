@@ -284,7 +284,7 @@ pub fn handle_script_errors<I: Iterator<Item = ScriptError> + Clone>(world: Worl
 #[cfg(test)]
 #[allow(clippy::todo)]
 mod test {
-    use std::{borrow::Cow, collections::HashMap, sync::Arc};
+    use std::{borrow::Cow, sync::Arc};
 
     use bevy::{
         app::{App, Update},
@@ -292,6 +292,7 @@ mod test {
         diagnostic::DiagnosticsPlugin,
         ecs::world::FromWorld,
     };
+    use bevy::platform::collections::HashMap;
     use parking_lot::Mutex;
     use test_utils::make_test_plugin;
 

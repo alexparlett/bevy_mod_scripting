@@ -126,6 +126,9 @@ impl IntoDynamic for ScriptValue {
                 )
                 .into())
             }
+            ScriptValue::Dynamic(custom_type) => {
+                custom_type
+            }
         })
     }
 }

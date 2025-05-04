@@ -88,7 +88,7 @@ impl<T> ArgMeta for Option<T> {
 impl<T> ArgMeta for Vec<T> {}
 impl<T, const N: usize> ArgMeta for [T; N] {}
 
-impl<K, V> ArgMeta for std::collections::HashMap<K, V> {}
+impl<K, V> ArgMeta for bevy::platform::collections::HashMap<K, V> {}
 
 impl_arg_info!(DynamicScriptFunction, DynamicScriptFunctionMut);
 

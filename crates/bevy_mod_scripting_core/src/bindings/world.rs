@@ -49,12 +49,12 @@ use std::{
     any::TypeId,
     borrow::Cow,
     cell::RefCell,
-    collections::HashMap,
     fmt::Debug,
     rc::Rc,
     sync::{atomic::AtomicBool, Arc},
 };
 use bevy::ecs::component::Mutable;
+use bevy::platform::collections::HashMap;
 use bevy::prelude::{ChildOf, Children};
 
 /// Prefer to directly using [`WorldAccessGuard`]. If the underlying type changes, this alias will be updated.

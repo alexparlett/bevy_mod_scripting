@@ -9,9 +9,8 @@ use crate::{
 ;
 use bevy::reflect::{FromReflect, GetTypeRegistration, TypeRegistry, Typed};
 use bevy_mod_scripting_derive::impl_get_type_dependencies;
-use std::{collections::HashMap, ffi::OsString, hash::Hash, path::PathBuf};
-
-
+use std::{ffi::OsString, hash::Hash, path::PathBuf};
+use bevy::platform::collections::HashMap;
 
 macro_rules! impl_get_type_dependencies_primitives {
     ($($ty:ty),*) => {
