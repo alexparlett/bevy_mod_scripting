@@ -147,7 +147,7 @@ impl Plugin for LuaScriptingPlugin {
     }
 }
 
-fn load_lua_content_into_context(
+pub fn load_lua_content_into_context(
     context: &mut Lua,
     script_id: &ScriptId,
     content: &[u8],
