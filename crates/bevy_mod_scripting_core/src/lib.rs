@@ -200,6 +200,12 @@ pub trait ConfigureScriptPlugin {
     ///
     /// This is useful for adding extensions that are not supported by default by BMS.
     fn set_additional_supported_extensions(self, extensions: &'static [&'static str]) -> Self;
+
+    /// Set the context builder for the plugin.
+    ///
+    /// This is useful to providing a custom load/reload function without needing to override
+    /// the complicated default pattern.
+    fn with_context_loader(self, context_builder: ContextBuilder<Self::P>) -> Self;
 }
 
 impl<P: IntoScriptPluginParams + AsMut<ScriptingPlugin<P>>> ConfigureScriptPlugin for P {
@@ -231,6 +237,11 @@ impl<P: IntoScriptPluginParams + AsMut<ScriptingPlugin<P>>> ConfigureScriptPlugi
 
     fn set_additional_supported_extensions(mut self, extensions: &'static [&'static str]) -> Self {
         self.as_mut().additional_supported_extensions = extensions;
+        self
+    }
+
+    fn with_context_loader(mut self, context_builder: ContextBuilder<Self::P>) -> Self {
+        self.as_mut().context_builder = context_builder;
         self
     }
 }
